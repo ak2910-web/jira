@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AI Education Bot – Jira</title>
+<style>
+:root{--bg:#fff;--s:#f4f5f7;--t:#172b4d;--m:#5e6c84;--b:#dfe1e6;--p:#0c66e4;--cd:#fff;--code:#091e42;--cf:#e9f2ff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1d2125;--s:#22272b;--t:#c7d1db;--m:#8c9bab;--b:#38414a;--p:#579dff;--cd:#2c333a;--code:#0d1117;--cf:#1c2b41}}
+:root[data-theme="dark"]{--bg:#1d2125;--s:#22272b;--t:#c7d1db;--m:#8c9bab;--b:#38414a;--p:#579dff;--cd:#2c333a;--code:#0d1117;--cf:#1c2b41}
+*{box-sizing:inherit}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--t);font:14px/1.5 -apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.top{display:flex;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--b);background:var(--bg);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.logo{font-weight:700;color:var(--p);font-size:16px}
+.top input{flex:1;max-width:420px;padding:6px 10px;border:1px solid var(--b);border-radius:4px;background:var(--bg);color:var(--t)}
+.btn{background:var(--p);color:#fff;border:0;border-radius:4px;padding:6px 12px;font-weight:600;cursor:pointer}
+.av{width:28px;height:28px;border-radius:50%;background:#172b4d;color:#fff;display:grid;place-items:center;font-size:11px;margin-left:auto}
+.wrap{display:flex;min-height:calc(100vh - 50px)}
+.side{width:200px;border-right:1px solid var(--b);padding:12px 8px;background:var(--bg);flex:none}
+.side div{padding:6px 10px;border-radius:4px;color:var(--m)}.side .on{background:var(--cf);color:var(--p);font-weight:600}
+.side h6{margin:14px 10px 4px;font-size:11px;color:var(--m);text-transform:uppercase}
+main{flex:1;min-width:0;padding:16px 24px}
+.bc{color:var(--m);font-size:12px}h1{font-size:22px;margin:4px 0 10px}
+.tabs{display:flex;gap:4px;border-bottom:2px solid var(--b);margin-bottom:16px;overflow-x:auto}
+.tabs a{padding:8px 12px;cursor:pointer;color:var(--m);font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px}
+.tabs a.on{color:var(--p);border-color:var(--p)}
+.board{display:flex;gap:8px;overflow-x:auto}
+.col{background:var(--s);border-radius:4px;min-width:200px;flex:1;padding:8px}
+.col h5{margin:0 0 8px;font-size:11px;color:var(--m)}
+.card{background:var(--cd);border-radius:3px;padding:8px;margin-bottom:6px;box-shadow:0 1px 1px rgba(9,30,66,.25)}
+.card small{color:var(--m)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{border:1px solid var(--b);border-radius:6px;padding:12px}.stat b{font-size:22px;display:block}
+table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--b)}
+.tag{background:var(--cf);color:var(--p);border-radius:3px;padding:1px 6px;font-size:11px;font-weight:600}
+.docs{display:flex;gap:16px}.toc{width:230px;flex:none;max-height:75vh;overflow:auto;border-right:1px solid var(--b);padding-right:8px}
+.toc h6{margin:10px 0 4px;color:var(--m);font-size:11px;text-transform:uppercase}
+.toc a{display:block;padding:4px 8px;border-radius:4px;cursor:pointer;color:var(--t)}.toc a.on{background:var(--cf);color:var(--p)}
+.doc{flex:1;min-width:0}.doc h2{margin:0 0 4px}
+pre{background:var(--code);color:#e6edf3;padding:12px;border-radius:6px;overflow-x:auto;font-size:12.5px;line-height:1.45}
+.out{border-left:3px solid var(--p);padding:6px 10px;background:var(--s);white-space:pre-wrap;font-family:monospace;font-size:12.5px}
+ol{padding-left:20px}
+@media(max-width:760px){.side{display:none}main{padding:12px}.docs{flex-direction:column}.toc{width:auto;max-height:160px;border:0}}
+</style></head><body>
+<div class="top"><span class="logo">◆ Jira</span><input placeholder="Search"><button class="btn">+ Create</button><div class="av">AP</div></div>
+<div class="wrap">
+<div class="side"><div>For you</div><div>Recent</div><div>Starred</div><h6>Spaces</h6><div class="on">AI Education Bot</div><div>Online Shopping Site</div><div>E-Learning Mgmt</div><h6>More</h6><div>Filters</div><div>Dashboards</div></div>
+<main>
+<div class="bc">Spaces / AI Education Bot</div><h1>AEB board</h1>
+<div class="tabs" id="tabs"><a data-t="sum">Summary</a><a data-t="board" class="on">Kanban board</a><a data-t="list">List</a><a data-t="cal">Calendar</a><a data-t="docs">Docs</a></div>
+<div id="v"></div>
+</main></div>
+<script>
+const J=[
+["Practical 1 – Table Driven Agent","Design a rational agent (PEAS) for Vacuum Cleaner & Autonomous Taxi; classify environment; implement a table-driven agent.",
+String.raw`# PEAS - Vacuum: P=clean room, min time | E=floor, room | A=wheels, suction, L/R | S=dust, wall, camera
+# PEAS - Taxi: P=reach safely | E=roads, traffic | A=accelerator, brake, steering | S=GPS, camera
+# Vacuum: fully observable, deterministic, sequential | Taxi: partially observable, stochastic, sequential
+table = {("A","Dirty"):"Suck",("A","Clean"):"Move Right",
+         ("B","Dirty"):"Suck",("B","Clean"):"Move Left"}
+location = input("Enter location (A|B): ")
+status = input("Enter status (Dirty|Clean): ")
+action = table.get((location, status), "Invalid Input")
+print("Percept:", (location, status))
+print("Action:", action)`,"Percept: ('A', 'Clean')\nAction: Move Right"],
+["Practical 2a – BFS (8-Puzzle)","Find shortest sequence of moves to goal using BFS.",
+String.raw`from collections import deque
+def print_board(s):
+    for i in range(0,9,3): print(s[i:i+3])
+    print()
+def bfs(start, goal):
+    queue = deque([(start, [])]); visited = []
+    while queue:
+        state, path = queue.popleft()
+        if state == goal: return path
+        if state not in visited:
+            visited.append(state); pos = state.index(0); moves = []
+            if pos > 2: moves.append(pos-3)
+            if pos < 6: moves.append(pos+3)
+            if pos % 3 != 0: moves.append(pos-1)
+            if pos % 3 != 2: moves.append(pos+1)
+            for m in moves:
+                n = state[:]; n[pos], n[m] = n[m], n[pos]
+                queue.append((n, path+[n]))
+    return None
+start=[1,2,3,4,0,6,7,5,8]; goal=[1,2,3,4,5,6,7,8,0]
+sol = bfs(start, goal)
+print("Initial State:"); print_board(start)
+if sol:
+    print("Steps:")
+    for s in sol: print_board(s)
+else: print("No Solution Found")`,"Step 1: [1,2,3][4,5,6][7,0,8]\nStep 2: [1,2,3][4,5,6][7,8,0]"],
+["Practical 2b – DFS (Water Jug)","Get exactly 2 L in a jug (4 L & 3 L) using DFS.",
+String.raw`def dfs(x, y):
+    if (x, y) in visited: return False
+    visited.add((x, y)); print("Jug1:", x, "Jug2:", y)
+    if x == target or y == target:
+        print("Goal Reached!"); return True
+    if dfs(cap1, y) or dfs(x, cap2) or dfs(0, y) or dfs(x, 0): return True
+    t = min(x, cap2 - y)
+    if dfs(x - t, y + t): return True
+    t = min(y, cap1 - x)
+    if dfs(x + t, y - t): return True
+    return False
+cap1, cap2, target = 4, 3, 2
+visited = set()
+print("DFS Water Jug Problem:")
+dfs(0, 0)`,"(0,0) (4,0) (4,3) (0,3) (3,0) (3,3) (4,2)\nGoal Reached!"],
+["Practical 2c – Uniform Cost Search","Least-cost path Arad → Bucharest using UCS.",
+String.raw`import heapq
+graph = {"Arad":[("Sibiu",140),("Zerind",75),("Timisoara",118)],
+ "Zerind":[("Arad",75),("Oradea",71)],"Oradea":[("Zerind",71),("Sibiu",151)],
+ "Timisoara":[("Arad",118),("Lugoj",111)],"Lugoj":[("Timisoara",111),("Mehadia",70)],
+ "Mehadia":[("Lugoj",70),("Drobeta",75)],"Drobeta":[("Mehadia",75),("Craiova",120)],
+ "Craiova":[("Drobeta",120),("Pitesti",138)],"Sibiu":[("Arad",140),("Fagaras",99)],
+ "Fagaras":[("Sibiu",99),("Bucharest",211)],"Pitesti":[("Craiova",138),("Bucharest",101)],
+ "Bucharest":[]}
+def ucs(start, goal):
+    q = [(0, start, [start])]; seen = set()
+    while q:
+        cost, node, path = heapq.heappop(q)
+        if node == goal: return cost, path
+        if node in seen: continue
+        seen.add(node)
+        for nb, w in graph[node]:
+            heapq.heappush(q, (cost+w, nb, path+[nb]))
+r = ucs("Arad", "Bucharest")
+print("Least cost path:"); print(" -> ".join(r[1])); print("Total cost:", r[0])`,"Arad -> Sibiu -> Fagaras -> Bucharest\nTotal cost: 450"],
+["Practical 3a – Greedy Best-First (8-Puzzle)","Solve 8-puzzle using Greedy search with Manhattan distance.",
+String.raw`from heapq import heappush, heappop
+GOAL=[[1,2,3],[4,5,6],[7,8,0]]
+def manhattan(s):
+    d=0
+    for i in range(3):
+        for j in range(3):
+            v=s[i][j]
+            if v: d+=abs(i-(v-1)//3)+abs(j-(v-1)%3)
+    return d
+def blank(s):
+    for i in range(3):
+        for j in range(3):
+            if s[i][j]==0: return i,j
+def neighbors(s):
+    x,y=blank(s); out=[]
+    for dx,dy in [(-1,0),(1,0),(0,-1),(0,1)]:
+        nx,ny=x+dx,y+dy
+        if 0<=nx<3 and 0<=ny<3:
+            n=[r[:] for r in s]; n[x][y],n[nx][ny]=n[nx][ny],n[x][y]; out.append(n)
+    return out
+key=lambda s: tuple(map(tuple,s))
+def greedy(start):
+    pq=[]; heappush(pq,(manhattan(start),start,[start])); seen=set()
+    while pq:
+        h,cur,path=heappop(pq)
+        if cur==GOAL: return path
+        if key(cur) in seen: continue
+        seen.add(key(cur))
+        for n in neighbors(cur):
+            if key(n) not in seen: heappush(pq,(manhattan(n),n,path+[n]))
+sol=greedy([[1,2,3],[4,0,6],[7,5,8]])
+for i,s in enumerate(sol): print("Step",i,s)
+print("Total moves:",len(sol)-1)`,"Total moves: 2"],
+["Practical 3b – A* (8-Puzzle)","Shortest path using A* with Manhattan Distance Heuristic.",
+String.raw`# same heuristic()/neighbors() helpers as 3a
+def astar(start):
+    pq=[]; heappush(pq,(manhattan(start),0,start,[start])); visited=[]
+    while pq:
+        f,g,state,path=heappop(pq)
+        if state==GOAL: return path
+        if state in visited: continue
+        visited.append(state)
+        for c in neighbors(state):
+            heappush(pq,(g+1+manhattan(c),g+1,c,path+[c]))
+for step in astar([[1,2,3],[4,0,6],[7,5,8]]):
+    for row in step: print(row)
+    print()`,"3 states printed, ending at [7, 8, 0]"],
+["Practical 3c – A* on Road Graph","Arad → Bucharest using A* with straight-line-distance heuristic.",
+String.raw`from heapq import heappush, heappop
+# graph = same Romania graph as 2c
+heuristic={'Arad':366,'Zerind':374,'Oradea':380,'Timisoara':329,'Lugoj':244,
+ 'Mehadia':241,'Drobeta':242,'Craiova':160,'Sibiu':253,'Fagaras':176,
+ 'Pitesti':100,'Bucharest':0}
+def a_star(start, goal):
+    pq=[]; heappush(pq,(heuristic[start],0,start,[start])); seen=set()
+    while pq:
+        f,g,city,path=heappop(pq)
+        if city==goal: return path,g
+        if city in seen: continue
+        seen.add(city)
+        for nb,c in graph[city]:
+            if nb not in seen:
+                heappush(pq,(g+c+heuristic[nb],g+c,nb,path+[nb]))
+    return None,float("inf")
+path,cost=a_star("Arad","Bucharest")
+print("Shortest Path"); [print(c) for c in path]; print("Total Cost:",cost)`,"Arad, Sibiu, Fagaras, Bucharest\nTotal Cost: 450"],
+["Practical 4 – Bayes Rule","Probability a person has the disease given a positive test.",
+String.raw`P_D=0.01; P_notD=0.99
+P_T_given_D=0.99; P_T_given_notD=0.05
+P_T=(P_T_given_D*P_D)+(P_T_given_notD*P_notD)
+P_D_given_T=(P_T_given_D*P_D)/P_T
+print("Probability that the person actually has disease given")
+print(P_D_given_T)`,"0.16666666666666669"],
+["Practical 5 – Naïve Bayes","Naive Bayes classifier with scikit-learn (PlayTennis dataset).",
+String.raw`import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.metrics import accuracy_score
+df=pd.read_csv("PlayTennis.csv"); print("Original dataset"); print(df)
+enc=LabelEncoder()
+for c in df.columns: df[c]=enc.fit_transform(df[c])
+x=df[['Outlook','Temperature','Humidity','Wind']]; y=df['Play_Tennis']
+xtr,xte,ytr,yte=train_test_split(x,y,test_size=0.3,random_state=42)
+m=GaussianNB().fit(xtr,ytr); p=m.predict(xte)
+print("Predicted Values:"); print(p)
+print("\nActual Values:"); print(yte.values)
+print("Accuracy:",accuracy_score(yte,p)*100,"%")`,"Predicted [1 0 0 1 1] | Actual [1 1 0 1 0]\nAccuracy: 60.0 %"],
+["Practical 6 – Bayesian Network","Posterior P(Burglary | Alarm=True) using pgmpy.",
+String.raw`from pgmpy.models import DiscreteBayesianNetwork
+from pgmpy.factors.discrete import TabularCPD
+from pgmpy.inference import VariableElimination
+model=DiscreteBayesianNetwork([('Burglary','Alarm'),('Earthquake','Alarm')])
+b=TabularCPD('Burglary',2,[[0.999],[0.001]])
+e=TabularCPD('Earthquake',2,[[0.998],[0.002]])
+a=TabularCPD('Alarm',2,[[0.999,0.71,0.06,0.05],[0.001,0.29,0.94,0.95]],
+             evidence=['Burglary','Earthquake'],evidence_card=[2,2])
+model.add_cpds(b,e,a); print("Model Valid:",model.check_model())
+res=VariableElimination(model).query(variables=['Burglary'],evidence={'Alarm':1})
+print("\nPosterior Probability P(Burglary|Alarm = True):"); print(res)`,"Burglary(0)=0.6264  Burglary(1)=0.3736"],
+["Practical 7a – ML Workflow (Iris)","Load → preprocess → split → train → accuracy.",
+String.raw`import pandas as pd
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+iris=load_iris(); df=pd.DataFrame(iris.data,columns=iris.feature_names); df['target']=iris.target
+print(df.head())
+X=StandardScaler().fit_transform(df.drop('target',axis=1)); y=df['target']
+Xtr,Xte,ytr,yte=train_test_split(X,y,test_size=0.2,random_state=42)
+m=LogisticRegression().fit(Xtr,ytr)
+print("\nTraining Accuracy:",accuracy_score(ytr,m.predict(Xtr)))
+print("\nTesting Accuracy:",accuracy_score(yte,m.predict(Xte)))`,"Training Accuracy: 0.9667\nTesting Accuracy: 1.0"],
+["Practical 7b – Linear Regression","Linear Regression on synthetic data.",
+String.raw`from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.datasets import make_regression
+from sklearn.metrics import mean_squared_error,r2_score
+x,y=make_regression(n_samples=100,n_features=1,noise=10,random_state=42)
+xtr,xte,ytr,yte=train_test_split(x,y,test_size=0.2,random_state=42)
+m=LinearRegression().fit(xtr,ytr); p=m.predict(xte)
+print("Model Co-efficient:",m.coef_); print("Model Intercept:",m.intercept_)
+print("Mean Squared Error:",mean_squared_error(yte,p)); print("R2 Score:",r2_score(yte,p))`,"Coef [44.24] | MSE 104.20 | R2 0.9374"],
+["Practical 7c – MNIST Binary Classifier","Digit 5 vs not-5 using SGDClassifier.",
+String.raw`from sklearn.datasets import fetch_openml
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import SGDClassifier
+mnist=fetch_openml("mnist_784",version=1,as_frame=False)
+x=mnist.data; y=(mnist.target.astype(int)==5)
+xtr,xte,ytr,yte=train_test_split(x,y,test_size=0.3,random_state=1)
+m=SGDClassifier(random_state=1).fit(xtr,ytr)
+print("Training Accuracy:",m.score(xtr,ytr)*100); print("Testing Accuracy:",m.score(xte,yte)*100)
+print("Digit is 5" if m.predict([xte[0]])[0] else "Digit is not 5")`,"Train 97.08 | Test 96.70 | Digit is not 5"],
+["Practical 7d – K-Fold Cross-Validation","5-fold CV with Logistic Regression on Iris.",
+String.raw`from sklearn.datasets import load_iris
+from sklearn.model_selection import KFold,cross_val_score
+from sklearn.linear_model import LogisticRegression
+d=load_iris(); model=LogisticRegression(max_iter=1000)
+kf=KFold(n_splits=5,shuffle=True,random_state=1)
+s=cross_val_score(model,d.data,d.target,cv=kf)
+print("Cross Validation Scores:",s*100); print("Average Accuracy:",s.mean()*100)`,"[96.67 96.67 93.33 93.33 100.]  Average: 96.0"],
+["Practical 7e – Decision Tree Classifier","Decision Tree on Iris.",
+String.raw`from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.tree import DecisionTreeClassifier
+iris=load_iris()
+xtr,xte,ytr,yte=train_test_split(iris.data,iris.target,test_size=0.3,random_state=1)
+m=DecisionTreeClassifier(random_state=1).fit(xtr,ytr)
+print("Accuracy:",accuracy_score(yte,m.predict(xte))*100)
+print("Predicted class:",iris.target_names[m.predict([xte[0]])[0]])`,"Accuracy: 95.55  |  Predicted class: setosa"],
+["Practical 7f – Decision Tree Regression","California Housing dataset.",
+String.raw`from sklearn.datasets import fetch_california_housing
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error,r2_score
+from sklearn.tree import DecisionTreeRegressor
+d=fetch_california_housing()
+xtr,xte,ytr,yte=train_test_split(d.data,d.target,test_size=0.3,random_state=1)
+m=DecisionTreeRegressor(random_state=1).fit(xtr,ytr); p=m.predict(xte)
+print("Mean Squared Error:",mean_squared_error(yte,p)); print("R2 Score:",r2_score(yte,p))
+print("Predicted Value:",m.predict([xte[0]])[0])`,"MSE 0.4972 | R2 0.6219 | Predicted 2.19"],
+["Practical 7g – kNN Classifier","k=3 nearest neighbors on Iris.",
+String.raw`from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from sklearn.neighbors import KNeighborsClassifier
+i=load_iris()
+xtr,xte,ytr,yte=train_test_split(i.data,i.target,test_size=0.2,random_state=42)
+k=KNeighborsClassifier(n_neighbors=3).fit(xtr,ytr)
+print("Training Accuracy:",accuracy_score(ytr,k.predict(xtr)))
+print("Testing Accuracy:",accuracy_score(yte,k.predict(xte)))
+print(k.predict(xte)); print("\nActual Value:"); print(yte)`,"Training 0.95 | Testing 1.0"],
+["Practical 7h – Multiclass Classification","Logistic Regression on Iris (3 classes).",
+String.raw`from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+i=load_iris()
+xtr,xte,ytr,yte=train_test_split(i.data,i.target,test_size=0.3,random_state=42)
+m=LogisticRegression(max_iter=200).fit(xtr,ytr)
+print("Training Accuracy",accuracy_score(ytr,m.predict(xtr)))
+print("Testing Accuracy",accuracy_score(yte,m.predict(xte)))
+print("\nPredicted Values"); print(m.predict(xte)); print("\nActual Values"); print(yte)`,"Training 0.9619 | Testing 1.0"],
+["Practical 8 – Ethics & Bias Analysis","Class imbalance & bias in the Adult Income dataset.",
+String.raw`import pandas as pd
+from sklearn.datasets import fetch_openml
+import matplotlib.pyplot as plt
+df=fetch_openml('adult',version=2,as_frame=True).frame
+print("Dataset Shape:",df.shape)
+print("\nClass Distribution"); print(df['class'].value_counts())
+df['class'].value_counts().plot(kind='bar'); plt.title("Income Class Distribution")
+plt.xlabel("Income class"); plt.ylabel("Count"); plt.show()
+print("\nIncome distribution by gender:"); print(pd.crosstab(df['sex'],df['class']))
+print("\nIncome distribution by race:"); print(pd.crosstab(df['race'],df['class']))`,"Shape (48842, 15) | <=50K 37155, >50K 11687\nFemale 14423/1769 | Male 22732/9918"]
+];
+const S=[
+["Jira 1 – Setup & Project Creation","Create Jira Cloud account, Company-managed Kanban space, configure details.",["Open Chrome → Jira → Log in with Google → Continue.","Select Project Management → Kanban → Get Started → Next → Go to Jira.","Spaces → Create Space → Kanban → Use Template → Company-managed (E-Learning Management System, key ELMS).","Space settings → Details → edit name → Save."]],
+["Jira 2 – Team & Roles","Add members and assign Administrator role.",["ELMS → Space settings → People → Add people.","Enter name/email, choose role (Administrators) → Add.","Verify member appears in Current users."]],
+["Jira 3 – Issue Types, Components, Versions","Epic/Story/Task/Bug; releases and components.",["Backlog → Create: Epic 'E-Learning Management System', Task 'Create Student Login Page', Story 'A student can log in to the system', Bug 'Login button is not working'.","Space settings → Versions → Create Release: Version 1.0 – First version of ELMS.","Components → Student Management, Teacher Management, Course Management → Save each."]],
+["Jira 4 – Issue Management","Story under Epic; assignee, priority, due date.",["Add Story 'Student Can View Courses' → Add parent → Epic ELMS → Done.","Open the issue → Assignee, Priority = High, Due date = 15/10/2026."]],
+["Jira 5 – Workflow Customization","Custom workflow with transition and rule.",["Space settings → Workflows → Add Workflow → Add Existing → Classic default workflow → Next → Epic → Finish.","Edit workflow → Add Transition T1 (Open → In Progress) → Create → Update workflow.","Add Rule → Validate details → 'Validate that people have a specific permission' → Administer Projects → Add.","Publish → Associate → Acknowledge."]],
+["Jira 6 – Scrum Board & Sprints","Online Shopping Site (OSS): Sprint 1 & 2.",["Spaces + → Scrum → Use Template → Company-managed → Next.","Sprint 1 stories: User Registration, User Login, Product Catalog, Shopping Cart, Checkout Process (3,3,5,8,13 pts) → Start sprint (2 weeks).","Sprint 2: Profile Management, Order History & Tracking, Search & Filters, Rating & Reviews, Multiple Payment Gateway.","Complete issues → Summary → Reports → Sprint Report."]],
+["Jira 7 – Kanban Board (AI Education Bot)","Company-managed Kanban, IN REVIEW column, Control Chart.",["Create Space → Kanban → 'AI Education Bot' (key AEB) → Next.","Task 'Create a user registration and login system': assign to me, due 20/09/2026, High.","Add 'Developed Login API' to In Progress; new column IN REVIEW with 'Login Functionality' & 'Database Setup Completed'.","Backlog: Create Dashboard, Create User Profile, Perform Security Testing, Prepare Deployment.","Reports → More → Control Chart → choose columns."]],
+["Jira 8 – JQL & Filters","Filter by status, assignee, priority; save filter.",["Filters → View all filters → Filter for ELMS board: Status Backlog & In Progress, Assignee Current user, Priority High.","Advanced search → Save as; JQL:\nproject = \"ELMS\" AND status IN (Backlog, \"In Progress\") AND assignee = currentUser() ORDER BY Rank ASC"]],
+["Jira 9 – Reports & Dashboards","Burndown, Velocity, Pie chart, custom dashboard.",["Complete sprint → Reports → Burndown Chart, Velocity Chart (OSS).","More Reports → Pie Chart (by assignee); Recently Created Work Items (Monthly).","Dashboards → Create 'Customize AEB Dashboard' → Viewers: My Organization; Editors: AI Education Bot / Administrator → Add gadget Activity Stream → Configure, limit 10 → Save."]],
+["Jira 10 – Permissions & Security","Permission scheme and project roles.",["Space settings → Permissions → Actions → Update / Remove.","Space settings → People → Add person with suitable role → Add 1 person."]],
+["Jira 11 – Automation","Rule: Status changes to Done → email.",["OSS board → Automation → Create → trigger 'Field value changed' (Status, any change, all operations).","Condition: Work item field condition – Status equals Done.","Action: Send custom email 'Work Item Completed', subject 'Work Item Status Changed to Done', plain text body.","Save and enable as 'Task Completed Email Notification' (Private) → move a To Do item to Done → email received."]],
+["Jira 12 – Jira Mobile App","Install app, update issues, notifications.",["Play Store → Jira Cloud by Atlassian → install & log in → open ELMS board.","Open ELMS-5 → check Assignee → add comment 'Student can view Courses'.","Notifications tab → open update to view latest changes."]]
+];
+const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+const cards=[["AEB-1","Create a user registration and login system","Backlog"],["AEB-5","Create Dashboard","Backlog"],["AEB-6","Create User Profile","Backlog"],["AEB-2","Developed Login API","In Progress"],["AEB-3","Login Functionality","In Review"],["AEB-4","Database Setup Completed","In Review"]];
+const cols=["Backlog","Selected for development","In Progress","In Review","Done"];
+let tab="board",cur=0;
+function render(){
+ document.querySelectorAll("#tabs a").forEach(a=>a.classList.toggle("on",a.dataset.t==tab));
+ const v=document.getElementById("v");
+ if(tab=="board")v.innerHTML='<div class="board">'+cols.map(c=>'<div class="col"><h5>'+c.toUpperCase()+'</h5>'+cards.filter(k=>k[2]==c).map(k=>'<div class="card">'+k[1]+'<br><small>☑ '+k[0]+'</small></div>').join("")+'</div>').join("")+'</div>';
+ else if(tab=="sum")v.innerHTML='<div class="stats"><div class="stat"><b>6</b>work items created</div><div class="stat"><b>1</b>in progress</div><div class="stat"><b>2</b>in review</div><div class="stat"><b>0</b>due this week</div></div>';
+ else if(tab=="list")v.innerHTML='<table><tr><th>Key</th><th>Work</th><th>Status</th><th>Priority</th></tr>'+cards.map(k=>'<tr><td>'+k[0]+'</td><td>'+k[1]+'</td><td><span class="tag">'+k[2].toUpperCase()+'</span></td><td>'+(k[0]=="AEB-1"?"High":"Medium")+'</td></tr>').join("")+'</table>';
+ else if(tab=="cal")v.innerHTML='<p style="color:var(--m)">No work items scheduled this month.</p>';
+ else docs();
+}
+function docs(){
+ const all=[...J.map(x=>({g:"Module 1 – AI",x})),...S.map(x=>({g:"Module 2 – Jira",x}))];
+ let last="",toc="";
+ all.forEach((o,i)=>{if(o.g!=last){toc+='<h6>'+o.g+'</h6>';last=o.g}toc+='<a data-i="'+i+'" class="'+(i==cur?"on":"")+'">'+o.x[0]+'</a>'});
+ const o=all[cur].x,isAI=cur<J.length;
+ let body='<h2>'+o[0]+'</h2><p style="color:var(--m)">Aim: '+o[1]+'</p>';
+ if(isAI)body+='<pre>'+esc(o[2])+'</pre><b>Output</b><div class="out">'+esc(o[3])+'</div>';
+ else body+='<ol>'+o[2].map(s=>'<li>'+esc(s).replace(/\n/g,"<br>")+'</li>').join("")+'</ol>';
+ document.getElementById("v").innerHTML='<div class="docs"><div class="toc">'+toc+'</div><div class="doc">'+body+'</div></div>';
+ document.querySelectorAll(".toc a").forEach(a=>a.onclick=()=>{cur=+a.dataset.i;docs();scrollTo(0,0)});
+}
+document.querySelectorAll("#tabs a").forEach(a=>a.onclick=()=>{tab=a.dataset.t;render()});
+render();
+</script></body></html>
