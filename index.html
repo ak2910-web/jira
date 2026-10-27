@@ -131,12 +131,25 @@ function render(){
  else docs();
 }
 function docs(){
- const all=S.map(x=>({g:"MERN Stack Practicals",x}));
+ const all=[];
+ S.forEach(practical=>practical[2].forEach((question,i)=>{
+  const letter=String.fromCharCode(97+i);
+  const match=question.match(/^Q\([^)]+\)\s*(.*?)\nA:\s*([\s\S]*)$/);
+  all.push({
+   g:practical[0],
+   x:[
+    practical[0].replace(/^Practical \d+ – /,"")+' – Question '+letter.toUpperCase(),
+    practical[1],
+    match?match[1]:question,
+    match?match[2]:""
+   ]
+  });
+ }));
  let last="",toc="";
  all.forEach((o,i)=>{if(o.g!=last){toc+='<h6>'+o.g+'</h6>';last=o.g}toc+='<a data-i="'+i+'" class="'+(i==cur?"on":"")+'">'+o.x[0]+'</a>'});
  const o=all[cur].x;
  let body='<h2>'+o[0]+'</h2><p style="color:var(--m)">Aim: '+o[1]+'</p>';
- body+='<ol>'+o[2].map(s=>'<li>'+esc(s).replace(/\n/g,"<br>")+'</li>').join("")+'</ol>';
+ body+='<h3>Question</h3><p>'+esc(o[2]).replace(/\n/g,"<br>")+'</p><h3>Answer</h3><div class="out">'+esc(o[3]).replace(/\n/g,"<br>")+'</div>';
  document.getElementById("v").innerHTML='<div class="docs"><div class="toc">'+toc+'</div><div class="doc">'+body+'</div></div>';
  document.querySelectorAll(".toc a").forEach(a=>a.onclick=()=>{cur=+a.dataset.i;docs();scrollTo(0,0)});
 }
