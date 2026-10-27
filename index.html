@@ -34,7 +34,7 @@ table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px;bord
 .docs{display:flex;gap:16px}.toc{width:230px;flex:none;max-height:75vh;overflow:auto;border-right:1px solid var(--b);padding-right:8px}
 .toc h6{margin:10px 0 4px;color:var(--m);font-size:11px;text-transform:uppercase}
 .toc a{display:block;padding:4px 8px;border-radius:4px;cursor:pointer;color:var(--t)}.toc a.question{padding-left:16px;font-size:13px}.toc a.on{background:var(--cf);color:var(--p)}
-.doc{flex:1;min-width:0}.doc h2{margin:0 0 4px}
+.doc{flex:1;min-width:0}.doc h2{margin:0 0 4px}.doc h3{margin-bottom:4px}.answer{white-space:pre-wrap}.practical-code{margin-top:20px}
 pre{background:var(--code);color:#e6edf3;padding:12px;border-radius:6px;overflow-x:auto;font-size:12.5px;line-height:1.45}
 .out{border-left:3px solid var(--p);padding:6px 10px;background:var(--s);white-space:pre-wrap;font-family:monospace;font-size:12.5px}
 ol{padding-left:20px}
@@ -49,75 +49,369 @@ ol{padding-left:20px}
 <div id="v"></div>
 </main></div>
 <script>
+const q=(title,answer)=>({title,answer});
 const S=[
-["Practical 1 – Environmental Setup and JavaScript Basics","Install tools and run basic JavaScript programs in Node.js.",[
-"Q(a) Install Node.js and VS Code and verify setup.\nA: Install Node.js LTS from nodejs.org, then verify using `node -v` and `npm -v`; install and open VS Code.",
-"Q(b) Create a simple Node.js file and run it.\nA: Create `app.js` with `console.log(\"Welcome to Node.js\")`, then run `node app.js` in terminal.",
-"Q(c) Demonstrate console log, variables, and arithmetic operations.\nA: Use `let`/`const` variables and print addition, subtraction, multiplication, division, modulus, and exponentiation with `console.log`.",
-"Q(d) Create and run a program using variables and functions.\nA: Define a function (for example `display(name, age)`) and call it with variables to print formatted output.",
-"Q(e) Demonstrate operators and control statements in JavaScript.\nA: Show relational/logical operators and conditional flow using `if-else` and `switch`.",
-"Q(f) Write a program using loops and template literals.\nA: Use `for`/`while` loops and backtick strings like `` `Value is ${x}` `` for dynamic output."
-]],
-["Practical 2 – Core JavaScript Concepts for MERN","Implement core JavaScript function, array, and object operations.",[
-"Q(a) Create functions and call with parameters.\nA: Write reusable functions such as odd/even check, sum function, and pass input arguments at call time.",
-"Q(b) Work with arrays and objects.\nA: Create arrays/objects, read/update values, and iterate through entries using loops.",
-"Q(c) Demonstrate arrow functions.\nA: Use concise syntax like `const add=(a,b)=>a+b` and call it for output.",
-"Q(d) Use array methods (map, filter, reduce).\nA: `map` transforms items, `filter` selects matching items, and `reduce` accumulates into one result.",
-"Q(e) Manipulate objects and display outputs.\nA: Add/edit/delete object properties and print keys/values with `Object.keys` and loops.",
-"Q(f) Combine functions, arrays, and objects in one program.\nA: Build a mini program where array data is processed by functions and represented as objects."
-]],
-["Practical 3 – React Introduction and JSX","Create a React app and render dynamic JSX content.",[
-"Q(a) Create a React app (Vite/CRA) and display welcome message.\nA: Create app using Vite (`npm create vite@latest`) or CRA, then render “Welcome to MERN Stack Development”.",
-"Q(b) Display dynamic data using JSX.\nA: Bind JavaScript variables/expressions inside JSX using `{}` syntax.",
-"Q(c) Declare variables and function to calculate sum of two numbers.\nA: Define two variables, call a sum function, and render result in JSX.",
-"Q(d) Apply basic CSS styling to a React component.\nA: Create CSS file, import into component, and style text/cards/buttons.",
-"Q(e) Create a functional component and render in `App.jsx`.\nA: Define component function and include `<ComponentName />` in App return block.",
-"Q(f) Display current date and time dynamically.\nA: Use `new Date()` and render formatted date/time from component state or direct expression."
-]],
-["Practical 4 – React Components, Props, and State","Build interactive components using props and state.",[
-"Q(a) Create multiple components on one page.\nA: Split UI into reusable components and import/render all in `App.jsx`.",
-"Q(b) Pass data between components using props.\nA: Send values from parent to child via attributes and display with `props`.",
-"Q(c) Use `useState` to manage and update data.\nA: Initialize state and update with setter function on button/form events.",
-"Q(d) Display list items from state using `map()`.\nA: Store array in state and render list with unique `key` for each item.",
-"Q(e) Create a form component and show entered data dynamically.\nA: Capture input values with controlled components and render current values below form.",
-"Q(f) Build a small interactive component (Counter or ToDo).\nA: Implement increment/decrement logic or add/remove task flow with state updates."
-]],
-["Practical 5 – React Routing and Data Handling","Use routing and API calls in a React app.",[
-"Q(a) Install and configure React Router.\nA: Install `react-router-dom`, wrap app with router, and define routes.",
-"Q(b) Create multiple pages and navigation.\nA: Create page components and navigate between them via links/menu.",
-"Q(c) Use `Link` and `Routes`.\nA: Define `<Routes><Route ... /></Routes>` and navigate with `<Link to=\"/...\">`.",
-"Q(d) Fetch data from public API using Axios.\nA: Install Axios and call API in `useEffect`; store response in state.",
-"Q(e) Display fetched data in table/list.\nA: Map response array to rows/cards with clear headings and fields.",
-"Q(f) Implement search/filter on displayed data.\nA: Maintain query state and filter API data before rendering."
-]],
-["Practical 6 – Node.js and Express Fundamentals","Create backend server and route handlers with Express.",[
-"Q(a) Install Express and create a server.\nA: Run `npm init -y`, `npm install express`, then create `server.js` with `app.listen(...)`.",
-"Q(b) Create multiple routes in Express.\nA: Add routes like `/`, `/about`, `/api/users` using `app.get()`.",
-"Q(c) Send HTML content from Express server.\nA: Return HTML strings or files using `res.send()`/`res.sendFile()`.",
-"Q(d) Handle route parameters.\nA: Use dynamic path params like `/user/:id` and access via `req.params.id`.",
-"Q(e) Handle query parameters.\nA: Read values from `req.query` (for example `/search?q=mern`).",
-"Q(f) Create a simple JSON API.\nA: Return structured JSON arrays/objects with `res.json()`."
-]],
-["Practical 7 – MongoDB Community Server and Compass","Set up MongoDB and connect it to Node.js.",[
-"Q(a) Download and install MongoDB Community Server.\nA: Install MongoDB server and confirm service is running locally.",
-"Q(b) Perform CRUD in MongoDB Compass.\nA: Create database/collection, then insert, read, update, and delete documents using Compass UI.",
-"Q(c) Connect Node.js with MongoDB using Mongoose.\nA: Install `mongoose`, connect with connection URI, define schema/model, and test query."
-]],
-["Practical 8 – API Creation and Integration","Build and validate REST APIs with Mongoose + Express.",[
-"Q(a) Create MongoDB schema and model.\nA: Define `mongoose.Schema({...})` and export model for collection operations.",
-"Q(b) Implement REST API operations.\nA: Add Create, Read, Update, Delete endpoints using Express and Mongoose methods.",
-"Q(c) Test REST APIs in Postman.\nA: Send GET/POST/PUT/DELETE requests and verify status codes plus JSON responses."
-]],
-["Practical 9 – Frontend and Backend Integration","Connect React frontend to Express backend using Axios.",[
-"Q(a) Create React frontend and connect to Express API.\nA: Configure backend URL and call APIs from React using Axios.",
-"Q(b) Retrieve and display student records.\nA: Fetch list from API and render records in a table/list component.",
-"Q(c) Add, update, and delete student records.\nA: Implement form + edit + delete actions that call POST/PUT/DELETE and refresh UI."
-]],
-["Practical 10 – Complete MERN CRUD Application","Design and execute a full MERN application workflow.",[
-"Q(a) Build a complete MERN CRUD app.\nA: Combine React frontend, Node/Express API, and MongoDB database with full Create/Read/Update/Delete flow, validation, and end-to-end testing."
-]]
+{title:"Practical 1 – Environmental Setup and JavaScript Basics",aim:"Install the tools and run fundamental JavaScript programs with Node.js.",questions:[
+q("Install Node.js and VS Code and verify setup.","Download Node.js LTS from nodejs.org, install VS Code, then run `node -v` and `npm -v`. The version commands confirm that Node and npm are available in the terminal."),
+q("Create and run a Node.js file.","Create app.js, write a console.log statement, and run it with `node app.js`. Keep each practical in its own folder so the commands are reproducible."),
+q("Demonstrate variables, arithmetic, functions, operators, control statements, loops, and template literals.","Use const for values that do not change, let for changing values, functions for reusable logic, if/switch for decisions, and for/while for repetition."),
+],code:String.raw`// app.js
+const student = "Asha";
+let marks = 82;
+const bonus = 5;
+
+function average(total, subjects) {
+  return total / subjects;
+}
+
+console.log("Welcome to Node.js");
+console.log("Student:", student);
+console.log("Addition:", marks + bonus);
+console.log("Subtraction:", marks - bonus);
+console.log("Multiplication:", marks * 2);
+console.log("Division:", marks / 2);
+console.log("Modulus:", marks % 10);
+console.log("Power:", marks ** 2);
+console.log("Average:", average(marks + bonus, 2));
+
+if (marks >= 40 && marks <= 100) console.log("Result: Pass");
+else console.log("Result: Invalid or Fail");
+
+switch (student) {
+  case "Asha": console.log("Department: Computer Science"); break;
+  default: console.log("Department: General");
+}
+
+for (let i = 1; i <= 3; i++) console.log("for loop value:", i);
+let i = 1;
+while (i <= 3) {
+  console.log("while loop value:", i);
+  i++;
+}
+console.log("Student " + student + " scored " + marks + " marks.");`},
+{title:"Practical 2 – Core JavaScript Concepts for MERN",aim:"Use functions, arrays, objects, arrow functions, and array methods.",questions:[
+q("Create functions and call them with parameters.","Define small reusable functions and pass values when calling them. Return values instead of printing from every function so the functions can be reused."),
+q("Work with arrays and objects.","Read and update properties, iterate through records, and use map, filter, and reduce for common data transformations."),
+q("Combine functions, arrays, and objects.","Model students as objects, calculate a result for each object, filter passing students, and calculate the class total."),
+],code:String.raw`// core.js
+const students = [
+  { name: "Asha", marks: [80, 72, 91] },
+  { name: "Ravi", marks: [55, 61, 48] },
+  { name: "Mina", marks: [32, 45, 39] }
 ];
-const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+const sum = (numbers) => numbers.reduce((total, value) => total + value, 0);
+const average = (numbers) => sum(numbers) / numbers.length;
+const result = (student) => ({
+  ...student,
+  average: average(student.marks),
+  passed: average(student.marks) >= 40
+});
+
+const evaluated = students.map(result);
+const passed = evaluated.filter((student) => student.passed);
+const classTotal = evaluated.reduce((total, student) => total + student.average, 0);
+
+students[0].marks[0] = 85;
+students[0].city = "Pune";
+delete students[2].city;
+
+console.log("Arrow function sum:", sum([10, 20, 30]));
+console.log("Keys:", Object.keys(evaluated[0]));
+console.log("Values:", Object.values(evaluated[0]));
+console.table(evaluated);
+console.log("Passed students:", passed.map((student) => student.name));
+console.log("Class average:", classTotal / evaluated.length);`},
+{title:"Practical 3 – React Introduction and JSX",aim:"Create a React app, render JSX, use expressions, style a component, and display the current time.",questions:[
+q("Create the app and display a welcome message.","Run `npm create vite@latest react-intro -- --template react`, then run `npm install` and `npm run dev`. Replace App.jsx and import the stylesheet below."),
+q("Display dynamic data and calculate a sum.","Declare values and functions inside the component and insert their results into JSX with curly braces."),
+q("Create a functional component and display date and time.","Keep the Clock component separate and render it from App. State refreshes the time once per second."),
+],code:String.raw`// src/App.jsx
+import { useEffect, useState } from "react";
+import "./App.css";
+
+function Clock() {
+  const [now, setNow] = useState(new Date());
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+  return <p>Current time: {now.toLocaleString()}</p>;
+}
+
+export default function App() {
+  const first = 12;
+  const second = 8;
+  const add = (a, b) => a + b;
+  return (
+    <main className="card">
+      <h1>Welcome to MERN Stack Development</h1>
+      <p>{first} + {second} = {add(first, second)}</p>
+      <Clock />
+    </main>
+  );
+}
+
+// src/App.css
+.card { max-width: 560px; margin: 4rem auto; padding: 2rem; text-align: center;
+  font-family: Arial, sans-serif; color: #172b4d; background: #e9f2ff; border-radius: 12px; }
+h1 { color: #0c66e4; }`},
+{title:"Practical 4 – React Components, Props, and State",aim:"Build reusable components, pass props, manage state, render lists, and submit a controlled form.",questions:[
+q("Create components and pass props.","The parent owns the data and passes name and role to Profile through props."),
+q("Use state and render a list.","useState stores the counter, input, and task list. map renders each task with a stable key."),
+q("Create a controlled form.","The input value comes from state and the submit handler adds a trimmed task without reloading the page."),
+],code:String.raw`// src/App.jsx
+import { useState } from "react";
+
+function Profile({ name, role }) {
+  return <p><strong>{name}</strong> — {role}</p>;
+}
+
+export default function App() {
+  const [count, setCount] = useState(0);
+  const [task, setTask] = useState("");
+  const [tasks, setTasks] = useState(["Learn props"]);
+
+  function addTask(event) {
+    event.preventDefault();
+    if (!task.trim()) return;
+    setTasks((current) => [...current, task.trim()]);
+    setTask("");
+  }
+
+  return (
+    <main>
+      <h1>Interactive React Components</h1>
+      <Profile name="Asha" role="MERN learner" />
+      <button onClick={() => setCount((value) => value + 1)}>Count: {count}</button>
+      <form onSubmit={addTask}>
+        <input value={task} onChange={(event) => setTask(event.target.value)} placeholder="New task" />
+        <button type="submit">Add</button>
+      </form>
+      <ul>{tasks.map((item, index) => <li key={item + index}>{item}</li>)}</ul>
+    </main>
+  );
+}`},
+{title:"Practical 5 – React Routing and Data Handling",aim:"Create multiple routes, fetch data with Axios, display it, and filter the result.",questions:[
+q("Install and configure routing.","Run `npm install react-router-dom axios`, wrap the app in BrowserRouter, and define Routes for Home and Users."),
+q("Use Link, Routes, and Route.","Link changes the URL without a full reload; Routes selects the matching page component."),
+q("Fetch, display, and search API data.","useEffect calls the API once, loading/error state is shown explicitly, and the query filters the displayed users."),
+],code:String.raw`// src/main.jsx
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+function Home() { return <h2>Home page</h2>; }
+
+function Users() {
+  const [users, setUsers] = useState([]);
+  const [query, setQuery] = useState("");
+  const [error, setError] = useState("");
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/users")
+      .then((response) => setUsers(response.data))
+      .catch(() => setError("Could not load users."));
+  }, []);
+  const visible = users.filter((user) =>
+    user.name.toLowerCase().includes(query.toLowerCase()));
+  return <section><h2>Users</h2>
+    <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search" />
+    {error ? <p>{error}</p> : <ul>{visible.map((user) => <li key={user.id}>{user.name} — {user.email}</li>)}</ul>}
+  </section>;
+}
+
+function App() { return <><nav><Link to="/">Home</Link> | <Link to="/users">Users</Link></nav>
+  <Routes><Route path="/" element={<Home />} /><Route path="/users" element={<Users />} /></Routes></>; }
+ReactDOM.createRoot(document.getElementById("root")).render(<BrowserRouter><App /></BrowserRouter>);`},
+{title:"Practical 6 – Node.js and Express Fundamentals",aim:"Create an Express server with HTML, route parameters, query parameters, and JSON routes.",questions:[
+q("Install Express and create a server.","Run `npm init -y`, `npm install express`, and `node server.js`. The server listens on port 3000."),
+q("Create routes and send HTML.","app.get handles routes. res.send returns HTML strings, while res.json returns JSON."),
+q("Handle path and query parameters.","Use req.params for `/users/:id` and req.query for `/search?q=mern`."),
+],code:String.raw`// server.js
+const express = require("express");
+const app = express();
+const port = 3000;
+
+app.use(express.json());
+const users = [{ id: 1, name: "Asha" }, { id: 2, name: "Ravi" }];
+
+app.get("/", (req, res) => res.send("<h1>Express server is running</h1>"));
+app.get("/about", (req, res) => res.send("<p>MERN practical API</p>"));
+app.get("/api/users", (req, res) => res.json(users));
+app.get("/api/users/:id", (req, res) => {
+  const user = users.find((item) => item.id === Number(req.params.id));
+  if (!user) return res.status(404).json({ message: "User not found" });
+  res.json(user);
+});
+app.get("/search", (req, res) => {
+  const term = String(req.query.q || "").toLowerCase();
+  res.json(users.filter((user) => user.name.toLowerCase().includes(term)));
+});
+
+app.listen(port, () => console.log("Listening on http://localhost:" + port));`},
+{title:"Practical 7 – MongoDB Community Server and Compass",aim:"Install MongoDB, perform Compass CRUD, and connect a Node.js application with Mongoose.",questions:[
+q("Install MongoDB Community Server and Compass.","Install the Community Server and Compass from mongodb.com, start the MongoDB service, and connect Compass to `mongodb://127.0.0.1:27017`."),
+q("Perform CRUD in Compass.","Create database merndb and collection students. Insert a document, use Find to read it, Edit Document to update it, and Delete to remove it."),
+q("Connect Node.js with Mongoose.","Run `npm install mongoose`, define a schema/model, connect, create a document, query it, update it, and close the connection."),
+],code:String.raw`// mongo-crud.js
+const mongoose = require("mongoose");
+
+const studentSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  course: { type: String, default: "MERN" }
+});
+const Student = mongoose.model("Student", studentSchema);
+
+async function main() {
+  await mongoose.connect("mongodb://127.0.0.1:27017/merndb");
+  await Student.deleteMany({ email: "asha@example.com" });
+  const created = await Student.create({ name: "Asha", email: "asha@example.com" });
+  console.log("Created:", created.name);
+  console.log("Read:", await Student.find());
+  await Student.updateOne({ _id: created._id }, { course: "Full Stack MERN" });
+  console.log("Updated:", await Student.findById(created._id));
+  await Student.deleteOne({ _id: created._id });
+  await mongoose.disconnect();
+}
+main().catch((error) => { console.error(error); process.exitCode = 1; });`},
+{title:"Practical 8 – API Creation and Integration",aim:"Build a validated REST API with Express and Mongoose and test it with Postman.",questions:[
+q("Create a schema and model.","The Student schema validates required name/email fields and exports a model used by the route handlers."),
+q("Implement REST operations.","GET lists records, POST creates one, PUT updates one, and DELETE removes one. Each route returns an appropriate status code."),
+q("Test with Postman.","Use GET `/api/students`, POST with JSON `{ \"name\": \"Asha\", \"email\": \"asha@example.com\" }`, then PUT and DELETE using the returned id."),
+],code:String.raw`// api.js
+const express = require("express");
+const mongoose = require("mongoose");
+const app = express();
+app.use(express.json());
+
+const Student = mongoose.model("Student", new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true }
+}));
+
+app.get("/api/students", async (req, res) => res.json(await Student.find()));
+app.post("/api/students", async (req, res) => {
+  try { res.status(201).json(await Student.create(req.body)); }
+  catch (error) { res.status(400).json({ message: error.message }); }
+});
+app.put("/api/students/:id", async (req, res) => {
+  try {
+    const student = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!student) return res.status(404).json({ message: "Student not found" });
+    res.json(student);
+  } catch (error) { res.status(400).json({ message: error.message }); }
+});
+app.delete("/api/students/:id", async (req, res) => {
+  const student = await Student.findByIdAndDelete(req.params.id);
+  if (!student) return res.status(404).json({ message: "Student not found" });
+  res.status(204).end();
+});
+
+mongoose.connect("mongodb://127.0.0.1:27017/merndb")
+  .then(() => app.listen(3000, () => console.log("API on port 3000")))
+  .catch((error) => { console.error(error); process.exitCode = 1; });`},
+{title:"Practical 9 – Frontend and Backend Integration",aim:"Connect a React frontend to an Express API with Axios and implement student CRUD.",questions:[
+q("Connect React to Express.","Install Axios, set the API base URL to `http://localhost:3000/api/students`, and enable CORS in the Express server."),
+q("Retrieve and display records.","Load records in useEffect and render them as table rows. Show a useful error message if the request fails."),
+q("Add, update, and delete records.","Use POST for a new student, PUT while editing, and DELETE for removal; reload the list after each successful operation."),
+],code:String.raw`// server.js additions: npm install cors
+const cors = require("cors");
+app.use(cors());
+
+// src/App.jsx
+import { useEffect, useState } from "react";
+import axios from "axios";
+const api = axios.create({ baseURL: "http://localhost:3000/api" });
+
+export default function App() {
+  const [students, setStudents] = useState([]);
+  const [form, setForm] = useState({ name: "", email: "" });
+  const [editingId, setEditingId] = useState(null);
+  const [error, setError] = useState("");
+  async function load() { try { setStudents((await api.get("/students")).data); }
+    catch { setError("Backend is unavailable."); } }
+  useEffect(() => { load(); }, []);
+  function change(event) { setForm({ ...form, [event.target.name]: event.target.value }); }
+  async function submit(event) {
+    event.preventDefault();
+    if (editingId) await api.put("/students/" + editingId, form);
+    else await api.post("/students", form);
+    setForm({ name: "", email: "" }); setEditingId(null); load();
+  }
+  async function remove(id) { await api.delete("/students/" + id); load(); }
+  return <main><h1>Students</h1>{error && <p>{error}</p>}
+    <form onSubmit={submit}><input name="name" value={form.name} onChange={change} placeholder="Name" required />
+      <input name="email" value={form.email} onChange={change} placeholder="Email" required />
+      <button>{editingId ? "Update" : "Add"}</button></form>
+    <table><tbody>{students.map((student) => <tr key={student._id}><td>{student.name}</td><td>{student.email}</td>
+      <td><button onClick={() => { setEditingId(student._id); setForm({ name: student.name, email: student.email }); }}>Edit</button>
+      <button onClick={() => remove(student._id)}>Delete</button></td></tr>)}</tbody></table>
+  </main>;
+}`},
+{title:"Practical 10 – Complete MERN CRUD Application",aim:"Combine React, Express, MongoDB, and Mongoose into a validated end-to-end CRUD application.",questions:[
+q("Create the project.","Create separate client and server folders. Install React/Axios in client and Express, Mongoose, CORS, and dotenv in server."),
+q("Implement the complete workflow.","The server exposes validated CRUD endpoints and the client calls them, displays records, and supports create, edit, and delete."),
+q("Run and test end to end.","Start MongoDB, run the API on port 3000, run React on port 5173, create a record, refresh the browser, edit it, delete it, and verify the database in Compass."),
+],code:String.raw`// server/server.js
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const app = express();
+app.use(cors());
+app.use(express.json());
+const Student = mongoose.model("Student", new mongoose.Schema({
+  name: { type: String, required: true, trim: true },
+  email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+  course: { type: String, default: "MERN" }
+}));
+app.get("/api/students", async (req, res) => res.json(await Student.find().sort({ name: 1 })));
+app.post("/api/students", async (req, res) => {
+  try { res.status(201).json(await Student.create(req.body)); }
+  catch (error) { res.status(400).json({ message: error.message }); }
+});
+app.put("/api/students/:id", async (req, res) => {
+  try { const item = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    if (!item) return res.status(404).json({ message: "Not found" }); res.json(item); }
+  catch (error) { res.status(400).json({ message: error.message }); }
+});
+app.delete("/api/students/:id", async (req, res) => {
+  const item = await Student.findByIdAndDelete(req.params.id);
+  if (!item) return res.status(404).json({ message: "Not found" }); res.status(204).end();
+});
+mongoose.connect(process.env.MONGO_URL || "mongodb://127.0.0.1:27017/merndb")
+  .then(() => app.listen(3000, () => console.log("API ready on port 3000")))
+  .catch((error) => { console.error(error); process.exitCode = 1; });
+
+// client/src/App.jsx
+import { useEffect, useState } from "react";
+import axios from "axios";
+const api = axios.create({ baseURL: "http://localhost:3000/api" });
+export default function App() {
+  const [items, setItems] = useState([]), [form, setForm] = useState({ name: "", email: "", course: "MERN" });
+  const [edit, setEdit] = useState(null), [message, setMessage] = useState("");
+  const load = async () => { try { setItems((await api.get("/students")).data); } catch { setMessage("API unavailable"); } };
+  useEffect(() => { load(); }, []);
+  const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const save = async (e) => { e.preventDefault(); try {
+    if (edit) await api.put("/students/" + edit, form); else await api.post("/students", form);
+    setForm({ name: "", email: "", course: "MERN" }); setEdit(null); setMessage("Saved"); load();
+  } catch (error) { setMessage(error.response?.data?.message || "Save failed"); } };
+  return <main><h1>MERN Student Manager</h1><p>{message}</p>
+    <form onSubmit={save}><input name="name" value={form.name} onChange={change} placeholder="Name" required />
+      <input name="email" value={form.email} onChange={change} placeholder="Email" required />
+      <input name="course" value={form.course} onChange={change} placeholder="Course" />
+      <button>{edit ? "Update" : "Create"}</button></form>
+    <ul>{items.map((item) => <li key={item._id}>{item.name} — {item.email} ({item.course})
+      <button onClick={() => { setEdit(item._id); setForm(item); }}>Edit</button>
+      <button onClick={async () => { await api.delete("/students/" + item._id); load(); }}>Delete</button></li>)}</ul>
+  </main>;
+}`},
+];
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 const cards=[["AEB-1","Create a user registration and login system","Backlog"],["AEB-5","Create Dashboard","Backlog"],["AEB-6","Create User Profile","Backlog"],["AEB-2","Developed Login API","In Progress"],["AEB-3","Login Functionality","In Review"],["AEB-4","Database Setup Completed","In Review"]];
 const cols=["Backlog","Selected for development","In Progress","In Review","Done"];
 let tab="board",cur=0;
@@ -134,17 +428,18 @@ function docs(){
  const all=[];
  let toc='<h6>MERN Stack Practicals</h6>';
  S.forEach((x,pi)=>{
-  x[2].forEach((s,qi)=>{
-   const question=s.split("\n")[0].replace(/^Q\([^)]+\)\s*/,"");
-   all.push({practical:x,question:s});
+  x.questions.forEach((question,qi)=>{
+   all.push({practical:x,question});
    const i=all.length-1;
-   toc+='<a data-i="'+i+'" class="question '+(i==cur?"on":"")+'">Practical '+(pi+1)+'.'+String.fromCharCode(97+qi)+': '+esc(question)+'</a>';
+   toc+='<a data-i="'+i+'" class="question '+(i==cur?"on":"")+'">Practical '+(pi+1)+'.'+String.fromCharCode(97+qi)+': '+esc(question.title)+'</a>';
   });
  });
  const o=all[cur]||all[0];
- const parts=o.question.split("\n");
- let body='<h2>'+o.practical[0]+'</h2><p style="color:var(--m)">Aim: '+o.practical[1]+'</p>';
- body+='<section><h3>'+esc(parts[0])+'</h3><p>'+esc(parts.slice(1).join("\n")).replace(/\n/g,"<br>")+'</p></section>';
+ let body='<h2>'+esc(o.practical.title)+'</h2><p style="color:var(--m)"><strong>Aim:</strong> '+esc(o.practical.aim)+'</p>';
+ body+=o.practical.questions.map((question,index)=>
+  '<section><h3>Question '+String.fromCharCode(97+index)+': '+esc(question.title)+'</h3><p class="answer">'+esc(question.answer)+'</p></section>'
+ ).join("");
+ body+='<section class="practical-code"><h3>Complete practical code</h3><p>Save the snippets using the file names shown in the comments, install the packages mentioned above, and run the relevant command for the project type.</p><pre>'+esc(o.practical.code)+'</pre></section>';
  document.getElementById("v").innerHTML='<div class="docs"><div class="toc">'+toc+'</div><div class="doc">'+body+'</div></div>';
  document.querySelectorAll(".toc a").forEach(a=>a.onclick=()=>{cur=+a.dataset.i;docs();scrollTo(0,0)});
 }
