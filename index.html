@@ -117,6 +117,120 @@ const S=[
 "Q(a) Build a complete MERN CRUD app.\nA: Combine React frontend, Node/Express API, and MongoDB database with full Create/Read/Update/Delete flow, validation, and end-to-end testing."
 ]]
 ];
+const C=[
+`// practical1.js
+const name="MERN Student", age=20, a=12, b=5;
+function display(person, years){ return person+" is "+years+" years old"; }
+console.log("Welcome to Node.js");
+console.log(display(name, age));
+console.log({add:a+b, subtract:a-b, multiply:a*b, divide:a/b, remainder:a%b, power:a**b});
+if(age>=18 && name) console.log("Adult student");
+else console.log("Minor student");
+for(let i=1;i<=5;i++) console.log(\`Value is \${i}\`);`,
+`// practical2.js
+const students=[{name:"Asha",marks:82},{name:"Ravi",marks:65},{name:"Mina",marks:91}];
+const add=(a,b)=>a+b;
+const passed=students.filter(s=>s.marks>=70);
+const names=students.map(s=>s.name);
+const total=students.reduce((sum,s)=>sum+s.marks,0);
+students[0].grade="A";
+delete students[1].grade;
+function result(student){ return {name:student.name, passed:student.marks>=40}; }
+console.log({names, passed, average:total/students.length, sample:result(students[0]), sum:add(7,3)});
+for(const [key,value] of Object.entries(students[0])) console.log(key,value);`,
+`// src/App.jsx
+import "./App.css";
+const student={name:"Asha",course:"MERN Stack"};
+function Sum({a,b}){ return <p>Sum: {a+b}</p>; }
+function App(){
+  const now=new Date().toLocaleString();
+  return <main className="card"><h1>Welcome to MERN Stack Development</h1>
+    <p>Student: {student.name}</p><p>Course: {student.course}</p>
+    <Sum a={10} b={20}/><p>Current time: {now}</p></main>;
+}
+export default App;`,
+`// src/App.jsx
+import {useState} from "react";
+function Header({title}){ return <h1>{title}</h1>; }
+function App(){
+  const [count,setCount]=useState(0);
+  const [task,setTask]=useState("");
+  const [tasks,setTasks]=useState([]);
+  function addTask(e){ e.preventDefault(); if(task.trim()) setTasks([...tasks,task.trim()]); setTask(""); }
+  return <main><Header title="Interactive ToDo"/>
+    <button onClick={()=>setCount(count+1)}>Count: {count}</button>
+    <form onSubmit={addTask}><input value={task} onChange={e=>setTask(e.target.value)}/>
+      <button>Add</button></form>
+    <ul>{tasks.map((item,index)=><li key={index}>{item}</li>)}</ul>
+  </main>;
+}
+export default App;`,
+`// src/App.jsx
+import {BrowserRouter,Link,Routes,Route} from "react-router-dom";
+import axios from "axios";
+import {useEffect,useState} from "react";
+function Home(){return <h2>Home</h2>;} function About(){return <h2>About</h2>;}
+function Students(){
+  const [rows,setRows]=useState([]); const [query,setQuery]=useState("");
+  useEffect(()=>{axios.get("https://jsonplaceholder.typicode.com/users").then(r=>setRows(r.data));},[]);
+  return <><input placeholder="Search" value={query} onChange={e=>setQuery(e.target.value)}/>
+    <ul>{rows.filter(x=>x.name.toLowerCase().includes(query.toLowerCase()))
+      .map(x=><li key={x.id}>{x.name} - {x.email}</li>)}</ul></>;
+}
+export default function App(){return <BrowserRouter><nav><Link to="/">Home</Link> <Link to="/about">About</Link> <Link to="/students">Students</Link></nav>
+  <Routes><Route path="/" element={<Home/>}/><Route path="/about" element={<About/>}/><Route path="/students" element={<Students/>}/></Routes></BrowserRouter>;}`,
+`// server.js
+const express=require("express"); const app=express(); app.use(express.json());
+const users=[{id:1,name:"Asha"},{id:2,name:"Ravi"}];
+app.get("/",(req,res)=>res.send("<h1>MERN API</h1>"));
+app.get("/about",(req,res)=>res.sendFile(__dirname+"/about.html"));
+app.get("/api/users",(req,res)=>res.json(users));
+app.get("/user/:id",(req,res)=>{const u=users.find(x=>x.id===Number(req.params.id)); res.json(u||{error:"Not found"});});
+app.get("/search",(req,res)=>res.json(users.filter(x=>x.name.toLowerCase().includes((req.query.q||"").toLowerCase()))));
+app.listen(3000,()=>console.log("http://localhost:3000"));`,
+`// connect.js
+const mongoose=require("mongoose");
+const Student=mongoose.model("Student",new mongoose.Schema({name:String,course:String}));
+async function main(){
+  await mongoose.connect("mongodb://127.0.0.1:27017/mern_practical");
+  await Student.deleteMany({});
+  await Student.create({name:"Asha",course:"MERN"});
+  console.log(await Student.find());
+  await mongoose.disconnect();
+}
+main().catch(console.error);`,
+`// server.js
+const express=require("express"); const mongoose=require("mongoose"); const app=express(); app.use(express.json());
+mongoose.connect("mongodb://127.0.0.1:27017/mern_practical");
+const Student=mongoose.model("Student",new mongoose.Schema({name:{type:String,required:true},course:String},{timestamps:true}));
+app.get("/students",async(req,res)=>res.json(await Student.find()));
+app.post("/students",async(req,res)=>res.status(201).json(await Student.create(req.body)));
+app.put("/students/:id",async(req,res)=>res.json(await Student.findByIdAndUpdate(req.params.id,req.body,{new:true})));
+app.delete("/students/:id",async(req,res)=>{await Student.findByIdAndDelete(req.params.id);res.sendStatus(204);});
+app.listen(3000,()=>console.log("API running on 3000"));`,
+`// src/App.jsx
+import axios from "axios"; import {useEffect,useState} from "react";
+const api="http://localhost:3000/students";
+export default function App(){
+  const [students,setStudents]=useState([]); const [form,setForm]=useState({name:"",course:""});
+  const load=()=>axios.get(api).then(r=>setStudents(r.data));
+  useEffect(load,[]);
+  const save=e=>{e.preventDefault(); axios.post(api,form).then(()=>{setForm({name:"",course:""});load();});};
+  return <main><h1>Students</h1><form onSubmit={save}><input placeholder="Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})}/>
+    <input placeholder="Course" value={form.course} onChange={e=>setForm({...form,course:e.target.value})}/><button>Add</button></form>
+    <ul>{students.map(s=><li key={s._id}>{s.name} - {s.course}</li>)}</ul></main>;
+}`,
+`// Complete MERN example: server.js
+const express=require("express"),mongoose=require("mongoose"),cors=require("cors");
+const app=express(); app.use(cors()); app.use(express.json());
+mongoose.connect(process.env.MONGO_URI||"mongodb://127.0.0.1:27017/mern_crud");
+const Student=mongoose.model("Student",new mongoose.Schema({name:{type:String,required:true,trim:true},email:{type:String,required:true,unique:true},course:String},{timestamps:true}));
+app.get("/api/students",async(req,res)=>res.json(await Student.find().sort({createdAt:-1})));
+app.post("/api/students",async(req,res)=>{try{res.status(201).json(await Student.create(req.body));}catch(e){res.status(400).json({error:e.message});}});
+app.put("/api/students/:id",async(req,res)=>{try{res.json(await Student.findByIdAndUpdate(req.params.id,req.body,{new:true,runValidators:true}));}catch(e){res.status(400).json({error:e.message});}});
+app.delete("/api/students/:id",async(req,res)=>{await Student.findByIdAndDelete(req.params.id);res.sendStatus(204);});
+app.listen(3000,()=>console.log("API on http://localhost:3000"));`
+];
 const esc=s=>s.replace(/&/g,"&amp;").replace(/</g,"&lt;");
 const cards=[["AEB-1","Create a user registration and login system","Backlog"],["AEB-5","Create Dashboard","Backlog"],["AEB-6","Create User Profile","Backlog"],["AEB-2","Developed Login API","In Progress"],["AEB-3","Login Functionality","In Review"],["AEB-4","Database Setup Completed","In Review"]];
 const cols=["Backlog","Selected for development","In Progress","In Review","Done"];
@@ -136,7 +250,7 @@ function docs(){
  S.forEach((x,pi)=>{
   x[2].forEach((s,qi)=>{
    const question=s.split("\n")[0].replace(/^Q\([^)]+\)\s*/,"");
-   all.push({practical:x,question:s});
+   all.push({practical:x,question:s,pi,qi});
    const i=all.length-1;
    toc+='<a data-i="'+i+'" class="question '+(i==cur?"on":"")+'">Practical '+(pi+1)+'.'+String.fromCharCode(97+qi)+': '+esc(question)+'</a>';
   });
@@ -144,7 +258,8 @@ function docs(){
  const o=all[cur]||all[0];
  const parts=o.question.split("\n");
  let body='<h2>'+o.practical[0]+'</h2><p style="color:var(--m)">Aim: '+o.practical[1]+'</p>';
- body+='<section><h3>'+esc(parts[0])+'</h3><p>'+esc(parts.slice(1).join("\n")).replace(/\n/g,"<br>")+'</p></section>';
+ body+='<section><h3>'+esc(parts[0])+'</h3><p><b>Complete answer:</b> '+esc(parts.slice(1).join("\n")).replace(/\n/g,"<br>")+'</p>';
+ body+='<h3>Full practical code</h3><pre>'+esc(C[o.pi])+'</pre><p><b>Run:</b> Follow the setup in the answer, then run the file using Node.js or start the React app with <code>npm run dev</code>.</p></section>';
  document.getElementById("v").innerHTML='<div class="docs"><div class="toc">'+toc+'</div><div class="doc">'+body+'</div></div>';
  document.querySelectorAll(".toc a").forEach(a=>a.onclick=()=>{cur=+a.dataset.i;docs();scrollTo(0,0)});
 }
