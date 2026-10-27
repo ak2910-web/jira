@@ -33,7 +33,7 @@ table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:8px;bord
 .tag{background:var(--cf);color:var(--p);border-radius:3px;padding:1px 6px;font-size:11px;font-weight:600}
 .docs{display:flex;gap:16px}.toc{width:230px;flex:none;max-height:75vh;overflow:auto;border-right:1px solid var(--b);padding-right:8px}
 .toc h6{margin:10px 0 4px;color:var(--m);font-size:11px;text-transform:uppercase}
-.toc a{display:block;padding:4px 8px;border-radius:4px;cursor:pointer;color:var(--t)}.toc a.on{background:var(--cf);color:var(--p)}
+.toc a{display:block;padding:4px 8px;border-radius:4px;cursor:pointer;color:var(--t)}.toc a.question{padding-left:16px;font-size:13px}.toc a.on{background:var(--cf);color:var(--p)}
 .doc{flex:1;min-width:0}.doc h2{margin:0 0 4px}
 pre{background:var(--code);color:#e6edf3;padding:12px;border-radius:6px;overflow-x:auto;font-size:12.5px;line-height:1.45}
 .out{border-left:3px solid var(--p);padding:6px 10px;background:var(--s);white-space:pre-wrap;font-family:monospace;font-size:12.5px}
@@ -131,12 +131,20 @@ function render(){
  else docs();
 }
 function docs(){
- const all=S.map(x=>({g:"MERN Stack Practicals",x}));
- let last="",toc="";
- all.forEach((o,i)=>{if(o.g!=last){toc+='<h6>'+o.g+'</h6>';last=o.g}toc+='<a data-i="'+i+'" class="'+(i==cur?"on":"")+'">'+o.x[0]+'</a>'});
- const o=all[cur].x;
- let body='<h2>'+o[0]+'</h2><p style="color:var(--m)">Aim: '+o[1]+'</p>';
- body+='<ol>'+o[2].map(s=>'<li>'+esc(s).replace(/\n/g,"<br>")+'</li>').join("")+'</ol>';
+ const all=[];
+ let toc='<h6>MERN Stack Practicals</h6>';
+ S.forEach((x,pi)=>{
+  x[2].forEach((s,qi)=>{
+   const question=s.split("\n")[0].replace(/^Q\([^)]+\)\s*/,"");
+   all.push({practical:x,question:s});
+   const i=all.length-1;
+   toc+='<a data-i="'+i+'" class="question '+(i==cur?"on":"")+'">Practical '+(pi+1)+'.'+String.fromCharCode(97+qi)+': '+esc(question)+'</a>';
+  });
+ });
+ const o=all[cur]||all[0];
+ const parts=o.question.split("\n");
+ let body='<h2>'+o.practical[0]+'</h2><p style="color:var(--m)">Aim: '+o.practical[1]+'</p>';
+ body+='<section><h3>'+esc(parts[0])+'</h3><p>'+esc(parts.slice(1).join("\n")).replace(/\n/g,"<br>")+'</p></section>';
  document.getElementById("v").innerHTML='<div class="docs"><div class="toc">'+toc+'</div><div class="doc">'+body+'</div></div>';
  document.querySelectorAll(".toc a").forEach(a=>a.onclick=()=>{cur=+a.dataset.i;docs();scrollTo(0,0)});
 }
